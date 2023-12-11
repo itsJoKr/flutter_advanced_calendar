@@ -17,6 +17,7 @@ class AdvancedCalendar extends StatefulWidget {
   const AdvancedCalendar({
     Key? key,
     this.controller,
+    required this.parentScrollController,
     this.startWeekDay,
     this.events,
     this.weekLineHeight = 32.0,
@@ -36,6 +37,8 @@ class AdvancedCalendar extends StatefulWidget {
           'keepLineSize should be used only when innerDot is true',
         ),
         super(key: key);
+
+  final ScrollController parentScrollController;
 
   /// Calendar selection date controller.
   final AdvancedCalendarController? controller;
@@ -158,6 +161,12 @@ class _AdvancedCalendarState extends State<AdvancedCalendar>
         return DateFormat("EEEE").format(list[index]).split('').first;
       });
     }
+
+    widget.parentScrollController.addListener(() {
+      final offset = widget.parentScrollController.offset;
+      _animationController.value =
+          _animationValue + offset / (widget.weekLineHeight * 5);
+    });
   }
 
   @override
@@ -168,18 +177,18 @@ class _AdvancedCalendarState extends State<AdvancedCalendar>
       child: DefaultTextStyle.merge(
         style: theme.textTheme.bodyMedium,
         child: GestureDetector(
-          onVerticalDragStart: (details) {
-            _captureOffset = details.globalPosition;
-          },
-          onVerticalDragUpdate: (details) {
-            final moveOffset = details.globalPosition;
-            final diffY = moveOffset.dy - _captureOffset!.dy;
-
-            _animationController.value =
-                _animationValue + diffY / (widget.weekLineHeight * 5);
-          },
-          onVerticalDragEnd: (details) => _handleFinishDrag(),
-          onVerticalDragCancel: _handleFinishDrag,
+          // onVerticalDragStart: (details) {
+          //   _captureOffset = details.globalPosition;
+          // },
+          // onVerticalDragUpdate: (details) {
+          //   final moveOffset = details.globalPosition;
+          //   final diffY = moveOffset.dy - _captureOffset!.dy;
+          //
+          //   _animationController.value =
+          //       _animationValue + diffY / (widget.weekLineHeight * 5);
+          // },
+          // onVerticalDragEnd: (details) => _handleFinishDrag(),
+          // onVerticalDragCancel: _handleFinishDrag,
           child: Container(
             color: Colors.transparent,
             child: Column(
@@ -212,9 +221,9 @@ class _AdvancedCalendarState extends State<AdvancedCalendar>
                   animation: _animationController,
                   builder: (_, __) {
                     final height = Tween<double>(
-                      begin: widget.weekLineHeight,
+                      begin: widget.weekLineHeight * widget.weeksInMonthViewAmount,
                       end:
-                          widget.weekLineHeight * widget.weeksInMonthViewAmount,
+                      widget.weekLineHeight,
                     ).transform(_animationController.value);
                     return SizedBox(
                       height: height,
@@ -228,8 +237,8 @@ class _AdvancedCalendarState extends State<AdvancedCalendar>
                                 ignoring: _animationController.value == 0.0,
                                 child: Opacity(
                                   opacity: Tween<double>(
-                                    begin: 0.0,
-                                    end: 1.0,
+                                    begin: 1.0,
+                                    end: 0.0,
                                   ).evaluate(_animationController),
                                   child: PageView.builder(
                                     onPageChanged: (pageIndex) {
@@ -241,9 +250,7 @@ class _AdvancedCalendarState extends State<AdvancedCalendar>
                                       _monthViewCurrentPage.value = pageIndex;
                                     },
                                     controller: _monthPageController,
-                                    physics: _animationController.value == 1.0
-                                        ? const AlwaysScrollableScrollPhysics()
-                                        : const NeverScrollableScrollPhysics(),
+                                    physics: const AlwaysScrollableScrollPhysics(),
                                     itemCount: _monthRangeList.length,
                                     itemBuilder: (_, pageIndex) {
                                       return MonthView(
@@ -281,8 +288,8 @@ class _AdvancedCalendarState extends State<AdvancedCalendar>
                                           _animationController.value == 1.0,
                                       child: Opacity(
                                         opacity: Tween<double>(
-                                          begin: 1.0,
-                                          end: 0.0,
+                                          begin: 0.0,
+                                          end: 1.0,
                                         ).evaluate(_animationController),
                                         child: SizedBox(
                                           height: widget.weekLineHeight,
