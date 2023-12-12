@@ -70,11 +70,9 @@ class WeekView extends StatelessWidget {
                               : isHighlight || highlightMonth == null
                                   ? null
                                   : theme.disabledColor,
-                          fontWeight:
-                              isSelected && textStyle?.fontWeight != null
-                                  ? FontWeight
-                                      .values[textStyle!.fontWeight!.index + 2]
-                                  : textStyle?.fontWeight,
+                          fontWeight: isSelected && textStyle?.fontWeight != null
+                              ? FontWeight.values[textStyle!.fontWeight!.index + 2]
+                              : textStyle?.fontWeight,
                         ),
                       ),
                       if (!hasEvent.isNegative)
@@ -83,9 +81,7 @@ class WeekView extends StatelessWidget {
                           width: 4,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(50),
-                            color: isSelected
-                                ? theme.colorScheme.onPrimary
-                                : theme.colorScheme.secondary,
+                            color: isSelected ? theme.colorScheme.onPrimary : theme.colorScheme.secondary,
                           ),
                         )
                     ],
@@ -101,7 +97,7 @@ class WeekView extends StatelessWidget {
                   width: innerDot ? 32 : 40,
                   height: innerDot ? 32 : 26,
                   showDot: innerDot,
-                  onPressed: onChanged != null ? () => onChanged!(date) : null,
+                  onPressed: () => onChanged!(date),
                   isSelected: isSelected,
                   isToday: isToday,
                   hasEvent: !hasEvent.isNegative,

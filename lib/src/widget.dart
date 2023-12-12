@@ -200,6 +200,8 @@ class _AdvancedCalendarState extends State<AdvancedCalendar>
                   valueListenable: _monthViewCurrentPage,
                   builder: (_, value, __) {
                     return Header(
+                      onLeftTap: _handleLeftTap,
+                      onRightTap: _handleRightTap,
                       monthDate:
                           _monthRangeList[_monthViewCurrentPage.value].firstDay,
                       onPressed: _handleTodayPressed,
@@ -234,7 +236,7 @@ class _AdvancedCalendarState extends State<AdvancedCalendar>
                             alignment: Alignment.center,
                             children: [
                               IgnorePointer(
-                                ignoring: _animationController.value == 0.0,
+                                ignoring: _animationController.value > 0.9,
                                 child: Opacity(
                                   opacity: Tween<double>(
                                     begin: 1.0,
@@ -270,13 +272,17 @@ class _AdvancedCalendarState extends State<AdvancedCalendar>
                                   ),
                                 ),
                               ),
+                              // WEEK VIEW
                               ValueListenableBuilder<int>(
                                 valueListenable: _monthViewCurrentPage,
                                 builder: (_, pageIndex, __) {
+                                  print('month' + _monthViewCurrentPage.value.toString());
                                   final index = selectedDate.findWeekIndex(
                                     _monthRangeList[_monthViewCurrentPage.value]
                                         .dates,
                                   );
+
+                                  print('index findWeekIndex' + index.toString());
                                   final offset = index /
                                           (widget.weeksInMonthViewAmount - 1) *
                                           2 -
@@ -285,7 +291,7 @@ class _AdvancedCalendarState extends State<AdvancedCalendar>
                                     alignment: Alignment(0.0, offset),
                                     child: IgnorePointer(
                                       ignoring:
-                                          _animationController.value == 1.0,
+                                          _animationController.value <= 0.9,
                                       child: Opacity(
                                         opacity: Tween<double>(
                                           begin: 0.0,
@@ -303,6 +309,7 @@ class _AdvancedCalendarState extends State<AdvancedCalendar>
                                                         .first
                                                         .month,
                                               );
+                                              print('pagIndex $pageIndex monthRangeList' + _monthRangeList.join(', '));
 
                                               if (widget.onHorizontalDrag !=
                                                   null) {
@@ -347,12 +354,12 @@ class _AdvancedCalendarState extends State<AdvancedCalendar>
                     );
                   },
                 ),
-                HandleBar(
-                  onPressed: () async {
-                    await _animationController.forward();
-                    _animationValue = 1.0;
-                  },
-                ),
+                // HandleBar(
+                //   onPressed: () async {
+                //     await _animationController.forward();
+                //     _animationValue = 1.0;
+                //   },
+                // ),
               ],
             ),
           ),
@@ -379,6 +386,7 @@ class _AdvancedCalendarState extends State<AdvancedCalendar>
 
     _monthViewCurrentPage.value = _monthRangeList
         .lastIndexWhere((monthRange) => monthRange.dates.contains(date));
+    print('a');
   }
 
   void _handleDateChanged(DateTime date) {
@@ -402,6 +410,34 @@ class _AdvancedCalendarState extends State<AdvancedCalendar>
 
     _monthPageController!.jumpToPage(widget.preloadMonthViewAmount ~/ 2);
     _weekPageController!.jumpToPage(widget.preloadWeekViewAmount ~/ 2);
+  }
+
+  void _handleLeftTap() {
+    if (_animationController.value >= 0.9) {
+      _weekPageController!.previousPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } else {
+      _monthPageController!.previousPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  void _handleRightTap() {
+    if (_animationController.value >= 0.9) {
+      _weekPageController!.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } else {
+      _monthPageController!.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
   }
 
   ScrollPhysics _closeMonthScroll() {

@@ -27,6 +27,7 @@ class WeekDays extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: List.generate(weekNames.length, (index) {
           return DateBox(
+            onPressed: null,
             child: Text(weekNames[index]),
           );
         }),
