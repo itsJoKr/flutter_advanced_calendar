@@ -5,11 +5,17 @@ import 'controller.dart';
 import 'datetime_util.dart';
 
 part 'date_box.dart';
+
 part 'handlebar.dart';
+
 part 'header.dart';
+
 part 'month_view.dart';
+
 part 'month_view_bean.dart';
+
 part 'week_days.dart';
+
 part 'week_view.dart';
 
 /// Advanced Calendar widget.
@@ -31,9 +37,7 @@ class AdvancedCalendar extends StatefulWidget {
     this.keepLineSize = false,
     this.calendarTextStyle,
   })  : assert(
-          keepLineSize && innerDot ||
-              innerDot && !keepLineSize ||
-              !innerDot && !keepLineSize,
+          keepLineSize && innerDot || innerDot && !keepLineSize || !innerDot && !keepLineSize,
           'keepLineSize should be used only when innerDot is true',
         ),
         super(key: key);
@@ -84,8 +88,7 @@ class AdvancedCalendar extends StatefulWidget {
   _AdvancedCalendarState createState() => _AdvancedCalendarState();
 }
 
-class _AdvancedCalendarState extends State<AdvancedCalendar>
-    with SingleTickerProviderStateMixin {
+class _AdvancedCalendarState extends State<AdvancedCalendar> with SingleTickerProviderStateMixin {
   late ValueNotifier<int> _monthViewCurrentPage;
   late AnimationController _animationController;
   late AdvancedCalendarController _controller;
@@ -164,8 +167,7 @@ class _AdvancedCalendarState extends State<AdvancedCalendar>
 
     widget.parentScrollController.addListener(() {
       final offset = widget.parentScrollController.offset;
-      _animationController.value =
-          _animationValue + offset / (widget.weekLineHeight * 5);
+      _animationController.value = _animationValue + offset / (widget.weekLineHeight * 5);
     });
   }
 
@@ -202,8 +204,7 @@ class _AdvancedCalendarState extends State<AdvancedCalendar>
                     return Header(
                       onLeftTap: _handleLeftTap,
                       onRightTap: _handleRightTap,
-                      monthDate:
-                          _monthRangeList[_monthViewCurrentPage.value].firstDay,
+                      monthDate: _monthRangeList[_monthViewCurrentPage.value].firstDay,
                       onPressed: _handleTodayPressed,
                       dateStyle: widget.headerStyle,
                       todayStyle: widget.todayStyle,
@@ -215,17 +216,14 @@ class _AdvancedCalendarState extends State<AdvancedCalendar>
                     color: theme.hintColor,
                   ),
                   keepLineSize: widget.keepLineSize,
-                  weekNames: _weekNames != null
-                      ? _weekNames!
-                      : const <String>['S', 'M', 'T', 'W', 'T', 'F', 'S'],
+                  weekNames: _weekNames != null ? _weekNames! : const <String>['S', 'M', 'T', 'W', 'T', 'F', 'S'],
                 ),
                 AnimatedBuilder(
                   animation: _animationController,
                   builder: (_, __) {
                     final height = Tween<double>(
                       begin: widget.weekLineHeight * widget.weeksInMonthViewAmount,
-                      end:
-                      widget.weekLineHeight,
+                      end: widget.weekLineHeight,
                     ).transform(_animationController.value);
                     return SizedBox(
                       height: height,
@@ -250,6 +248,12 @@ class _AdvancedCalendarState extends State<AdvancedCalendar>
                                         );
                                       }
                                       _monthViewCurrentPage.value = pageIndex;
+                                      _weekPageController!.jumpToPage(
+                                        _weekRangeList.indexWhere(
+                                          (index) =>
+                                              index.first.month == _monthRangeList[pageIndex].firstDay.month,
+                                        ),
+                                      );
                                     },
                                     controller: _monthPageController,
                                     physics: const AlwaysScrollableScrollPhysics(),
@@ -261,8 +265,7 @@ class _AdvancedCalendarState extends State<AdvancedCalendar>
                                         todayDate: _todayDate,
                                         selectedDate: selectedDate,
                                         weekLineHeight: widget.weekLineHeight,
-                                        weeksAmount:
-                                            widget.weeksInMonthViewAmount,
+                                        weeksAmount: widget.weeksInMonthViewAmount,
                                         onChanged: _handleDateChanged,
                                         events: widget.events,
                                         keepLineSize: widget.keepLineSize,
@@ -278,20 +281,15 @@ class _AdvancedCalendarState extends State<AdvancedCalendar>
                                 builder: (_, pageIndex, __) {
                                   print('month' + _monthViewCurrentPage.value.toString());
                                   final index = selectedDate.findWeekIndex(
-                                    _monthRangeList[_monthViewCurrentPage.value]
-                                        .dates,
+                                    _monthRangeList[_monthViewCurrentPage.value].dates,
                                   );
 
                                   print('index findWeekIndex' + index.toString());
-                                  final offset = index /
-                                          (widget.weeksInMonthViewAmount - 1) *
-                                          2 -
-                                      1.0;
+                                  final offset = index / (widget.weeksInMonthViewAmount - 1) * 2 - 1.0;
                                   return Align(
                                     alignment: Alignment(0.0, offset),
                                     child: IgnorePointer(
-                                      ignoring:
-                                          _animationController.value <= 0.9,
+                                      ignoring: _animationController.value <= 0.9,
                                       child: Opacity(
                                         opacity: Tween<double>(
                                           begin: 0.0,
@@ -301,25 +299,22 @@ class _AdvancedCalendarState extends State<AdvancedCalendar>
                                           height: widget.weekLineHeight,
                                           child: PageView.builder(
                                             onPageChanged: (indexPage) {
-                                              final pageIndex =
-                                                  _monthRangeList.indexWhere(
+                                              final pageIndex = _monthRangeList.indexWhere(
                                                 (index) =>
-                                                    index.firstDay.month ==
-                                                    _weekRangeList[indexPage]
-                                                        .first
-                                                        .month,
+                                                    index.firstDay.month == _weekRangeList[indexPage].first.month,
                                               );
                                               print('pagIndex $pageIndex monthRangeList' + _monthRangeList.join(', '));
 
-                                              if (widget.onHorizontalDrag !=
-                                                  null) {
+                                              if (widget.onHorizontalDrag != null) {
                                                 widget.onHorizontalDrag!(
-                                                  _monthRangeList[pageIndex]
-                                                      .firstDay,
+                                                  _monthRangeList[pageIndex].firstDay,
                                                 );
                                               }
-                                              _monthViewCurrentPage.value =
-                                                  pageIndex;
+
+                                              _monthViewCurrentPage.value = pageIndex;
+                                              _monthPageController!.jumpToPage(
+                                                _monthViewCurrentPage.value,
+                                              );
                                             },
                                             controller: _weekPageController,
                                             itemCount: _weekRangeList.length,
@@ -329,15 +324,11 @@ class _AdvancedCalendarState extends State<AdvancedCalendar>
                                                 innerDot: widget.innerDot,
                                                 dates: _weekRangeList[index],
                                                 selectedDate: selectedDate,
-                                                lineHeight:
-                                                    widget.weekLineHeight,
-                                                onChanged:
-                                                    _handleWeekDateChanged,
+                                                lineHeight: widget.weekLineHeight,
+                                                onChanged: _handleWeekDateChanged,
                                                 events: widget.events,
-                                                keepLineSize:
-                                                    widget.keepLineSize,
-                                                textStyle:
-                                                    widget.calendarTextStyle,
+                                                keepLineSize: widget.keepLineSize,
+                                                textStyle: widget.calendarTextStyle,
                                               );
                                             },
                                           ),
@@ -384,14 +375,16 @@ class _AdvancedCalendarState extends State<AdvancedCalendar>
   void _handleWeekDateChanged(DateTime date) {
     _handleDateChanged(date);
 
-    _monthViewCurrentPage.value = _monthRangeList
-        .lastIndexWhere((monthRange) => monthRange.dates.contains(date));
+    _monthViewCurrentPage.value = _monthRangeList.lastIndexWhere((monthRange) => monthRange.dates.contains(date));
     print('a');
+    _monthPageController!.jumpToPage(_monthViewCurrentPage.value);
   }
 
   void _handleDateChanged(DateTime date) {
     _controller.value = date;
   }
+
+  void _onWeekChanged() {}
 
   void _handleFinishDrag() async {
     _captureOffset = null;
@@ -441,10 +434,8 @@ class _AdvancedCalendarState extends State<AdvancedCalendar>
   }
 
   ScrollPhysics _closeMonthScroll() {
-    if ((_monthViewCurrentPage.value ==
-            (widget.preloadMonthViewAmount ~/ 2) + 3 ||
-        _monthViewCurrentPage.value ==
-            (widget.preloadMonthViewAmount ~/ 2) - 3)) {
+    if ((_monthViewCurrentPage.value == (widget.preloadMonthViewAmount ~/ 2) + 3 ||
+        _monthViewCurrentPage.value == (widget.preloadMonthViewAmount ~/ 2) - 3)) {
       return const NeverScrollableScrollPhysics();
     } else {
       return const AlwaysScrollableScrollPhysics();
