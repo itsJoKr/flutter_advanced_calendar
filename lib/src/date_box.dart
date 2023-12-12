@@ -6,8 +6,8 @@ class DateBox extends StatelessWidget {
     Key? key,
     required this.child,
     this.color,
-    this.width = 24.0,
-    this.height = 24.0,
+    this.width = 48.0,
+    this.height = 36.0,
     this.borderRadius = const BorderRadius.all(Radius.circular(8.0)),
     this.onPressed,
     this.showDot = false,
@@ -54,8 +54,7 @@ class DateBox extends StatelessWidget {
       child: InkResponse(
         onTap: onPressed,
         radius: 16.0,
-        borderRadius: borderRadius,
-        highlightShape: BoxShape.rectangle,
+        highlightShape: BoxShape.circle,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 150),
           width: width,
@@ -67,7 +66,7 @@ class DateBox extends StatelessWidget {
                 : isToday
                     ? theme.highlightColor
                     : null,
-            borderRadius: borderRadius,
+            shape: BoxShape.circle,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

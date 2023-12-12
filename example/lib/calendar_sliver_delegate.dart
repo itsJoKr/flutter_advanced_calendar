@@ -42,9 +42,10 @@ class CalendarSliverDelegate implements SliverPersistentHeaderDelegate {
       // width: double.infinity,
       child: AdvancedCalendar(
         controller: controller,
+        innerDot: true,
         parentScrollController: scrollController,
         events: events,
-        startWeekDay: 1,
+        startWeekDay: 7,
       ),
     );
   }

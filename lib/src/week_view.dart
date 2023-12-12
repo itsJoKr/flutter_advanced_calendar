@@ -98,8 +98,8 @@ class WeekView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 DateBox(
-                  width: innerDot ? 32 : 24,
-                  height: innerDot ? 32 : 24,
+                  width: innerDot ? 32 : 40,
+                  height: innerDot ? 32 : 26,
                   showDot: innerDot,
                   onPressed: onChanged != null ? () => onChanged!(date) : null,
                   isSelected: isSelected,
