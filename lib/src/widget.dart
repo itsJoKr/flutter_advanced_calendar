@@ -153,7 +153,10 @@ class _AdvancedCalendarState extends State<AdvancedCalendar> with SingleTickerPr
         widget.preloadWeekViewAmount,
         startWeekDay: widget.startWeekDay,
       );
-      _weekPageController?.jumpToPage(widget.preloadWeekViewAmount ~/ 2);
+
+      if (_weekPageController!.hasClients) {
+        _weekPageController!.jumpToPage(widget.preloadWeekViewAmount ~/ 2);
+      }
       widget.onSelect?.call(_controller.value);
     });
     if (widget.startWeekDay != null && widget.startWeekDay! < 7) {
