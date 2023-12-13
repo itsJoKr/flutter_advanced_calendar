@@ -24,6 +24,7 @@ class AdvancedCalendar extends StatefulWidget {
     Key? key,
     this.controller,
     required this.parentScrollController,
+    this.onSelect,
     this.startWeekDay,
     this.events,
     this.weekLineHeight = 32.0,
@@ -46,6 +47,8 @@ class AdvancedCalendar extends StatefulWidget {
 
   /// Calendar selection date controller.
   final AdvancedCalendarController? controller;
+
+  final Function(DateTime)? onSelect;
 
   /// Executes on horizontal calendar swipe. Allows to load additional dates.
   final Function(DateTime)? onHorizontalDrag;
@@ -150,7 +153,8 @@ class _AdvancedCalendarState extends State<AdvancedCalendar> with SingleTickerPr
         widget.preloadWeekViewAmount,
         startWeekDay: widget.startWeekDay,
       );
-      _weekPageController!.jumpToPage(widget.preloadWeekViewAmount ~/ 2);
+      _weekPageController?.jumpToPage(widget.preloadWeekViewAmount ~/ 2);
+      widget.onSelect?.call(_controller.value);
     });
     if (widget.startWeekDay != null && widget.startWeekDay! < 7) {
       final time = _controller.value.subtract(
@@ -279,12 +283,10 @@ class _AdvancedCalendarState extends State<AdvancedCalendar> with SingleTickerPr
                               ValueListenableBuilder<int>(
                                 valueListenable: _monthViewCurrentPage,
                                 builder: (_, pageIndex, __) {
-                                  print('month' + _monthViewCurrentPage.value.toString());
                                   final index = selectedDate.findWeekIndex(
                                     _monthRangeList[_monthViewCurrentPage.value].dates,
                                   );
 
-                                  print('index findWeekIndex' + index.toString());
                                   final offset = index / (widget.weeksInMonthViewAmount - 1) * 2 - 1.0;
                                   return Align(
                                     alignment: Alignment(0.0, offset),
@@ -303,7 +305,6 @@ class _AdvancedCalendarState extends State<AdvancedCalendar> with SingleTickerPr
                                                 (index) =>
                                                     index.firstDay.month == _weekRangeList[indexPage].first.month,
                                               );
-                                              print('pagIndex $pageIndex monthRangeList' + _monthRangeList.join(', '));
 
                                               if (widget.onHorizontalDrag != null) {
                                                 widget.onHorizontalDrag!(
@@ -376,7 +377,6 @@ class _AdvancedCalendarState extends State<AdvancedCalendar> with SingleTickerPr
     _handleDateChanged(date);
 
     _monthViewCurrentPage.value = _monthRangeList.lastIndexWhere((monthRange) => monthRange.dates.contains(date));
-    print('a');
     _monthPageController!.jumpToPage(_monthViewCurrentPage.value);
   }
 
