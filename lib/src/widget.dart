@@ -31,6 +31,7 @@ class AdvancedCalendar extends StatefulWidget {
     this.preloadMonthViewAmount = 13,
     this.preloadWeekViewAmount = 21,
     this.weeksInMonthViewAmount = 6,
+    this.dotColor,
     this.todayStyle,
     this.headerStyle,
     this.onHorizontalDrag,
@@ -76,6 +77,8 @@ class AdvancedCalendar extends StatefulWidget {
 
   /// Style of Today button
   final TextStyle? todayStyle;
+
+  final Color? dotColor;
 
   /// Show DateBox event in container.
   final bool innerDot;
@@ -267,6 +270,7 @@ class _AdvancedCalendarState extends State<AdvancedCalendar> with SingleTickerPr
                                     itemCount: _monthRangeList.length,
                                     itemBuilder: (_, pageIndex) {
                                       return MonthView(
+                                        dotColor: widget.dotColor,
                                         innerDot: widget.innerDot,
                                         monthView: _monthRangeList[pageIndex],
                                         todayDate: _todayDate,
@@ -325,6 +329,7 @@ class _AdvancedCalendarState extends State<AdvancedCalendar> with SingleTickerPr
                                             physics: _closeMonthScroll(),
                                             itemBuilder: (context, index) {
                                               return WeekView(
+                                                dotColor: widget.dotColor,
                                                 innerDot: widget.innerDot,
                                                 dates: _weekRangeList[index],
                                                 selectedDate: selectedDate,

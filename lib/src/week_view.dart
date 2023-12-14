@@ -12,6 +12,7 @@ class WeekView extends StatelessWidget {
     required this.innerDot,
     required this.keepLineSize,
     this.textStyle,
+    this.dotColor,
   }) : super(key: key);
 
   final DateTime todayDate = DateTime.now().toZeroTime();
@@ -24,6 +25,7 @@ class WeekView extends StatelessWidget {
   final bool innerDot;
   final bool keepLineSize;
   final TextStyle? textStyle;
+  final Color? dotColor;
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +44,7 @@ class WeekView extends StatelessWidget {
             final isSelected = date.isAtSameMomentAs(selectedDate);
             final isHighlight = highlightMonth == date.month;
 
-            final hasEvent =
-                events!.indexWhere((element) => element.isSameDate(date));
+            final hasEvent = events!.indexWhere((element) => element.isSameDate(date));
 
             if (keepLineSize) {
               return InkResponse(
@@ -97,6 +98,7 @@ class WeekView extends StatelessWidget {
                   width: innerDot ? 32 : 40,
                   height: innerDot ? 32 : 26,
                   showDot: innerDot,
+                  dotColor: dotColor,
                   onPressed: () => onChanged!(date),
                   isSelected: isSelected,
                   isToday: isToday,

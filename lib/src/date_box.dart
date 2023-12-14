@@ -14,6 +14,7 @@ class DateBox extends StatelessWidget {
     this.isSelected = false,
     this.isToday = false,
     this.hasEvent = false,
+    this.dotColor,
   }) : super(key: key);
 
   /// Child widget.
@@ -21,6 +22,8 @@ class DateBox extends StatelessWidget {
 
   /// Background color.
   final Color? color;
+
+  final Color? dotColor;
 
   /// Widget width.
   final double width;
@@ -79,9 +82,7 @@ class DateBox extends StatelessWidget {
                   width: 4,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: isSelected
-                        ? theme.colorScheme.onPrimary
-                        : theme.colorScheme.secondary,
+                    color: isSelected ? theme.colorScheme.onPrimary : dotColor,
                   ),
                 ),
             ],

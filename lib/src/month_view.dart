@@ -13,6 +13,7 @@ class MonthView extends StatelessWidget {
     this.events,
     required this.keepLineSize,
     this.textStyle,
+    this.dotColor,
   }) : super(key: key);
 
   final ViewRange monthView;
@@ -25,6 +26,7 @@ class MonthView extends StatelessWidget {
   final bool innerDot;
   final bool keepLineSize;
   final TextStyle? textStyle;
+  final Color? dotColor;
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +45,7 @@ class MonthView extends StatelessWidget {
             final weekStart = weekIndex * 7;
 
             return WeekView(
+              dotColor: dotColor,
               innerDot: innerDot,
               dates: monthView.dates.sublist(weekStart, weekStart + 7),
               selectedDate: selectedDate,
