@@ -235,7 +235,6 @@ class _AdvancedCalendarState extends State<AdvancedCalendar> with SingleTickerPr
                       begin: widget.weekLineHeight * widget.weeksInMonthViewAmount,
                       end: widget.weekLineHeight,
                     ).transform(_animationController.value);
-                    print('Rebuild');
                     return SizedBox(
                       height: height,
                       child: ValueListenableBuilder<DateTime>(
