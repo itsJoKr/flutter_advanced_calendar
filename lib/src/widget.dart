@@ -93,7 +93,9 @@ class AdvancedCalendar extends StatefulWidget {
 
 class _AdvancedCalendarState extends State<AdvancedCalendar> with SingleTickerProviderStateMixin {
   late ValueNotifier<int> _monthViewCurrentPage;
+
   late AnimationController _animationController;
+
   late AdvancedCalendarController _controller;
   late double _animationValue;
   late List<ViewRange> _monthRangeList;
@@ -108,6 +110,8 @@ class _AdvancedCalendarState extends State<AdvancedCalendar> with SingleTickerPr
   @override
   void initState() {
     super.initState();
+
+    final height = widget.weekLineHeight * widget.weeksInMonthViewAmount;
 
     final monthPageIndex = widget.preloadMonthViewAmount ~/ 2;
 
@@ -171,11 +175,7 @@ class _AdvancedCalendarState extends State<AdvancedCalendar> with SingleTickerPr
         return DateFormat("EEEE").format(list[index]).split('').first;
       });
     }
-
-    widget.parentScrollController.addListener(() {
-      final offset = widget.parentScrollController.offset;
-      _animationController.value = _animationValue + offset / (widget.weekLineHeight * 5);
-    });
+    widget.parentScrollController.addListener(_onParentScrolled);
   }
 
   @override
@@ -232,6 +232,7 @@ class _AdvancedCalendarState extends State<AdvancedCalendar> with SingleTickerPr
                       begin: widget.weekLineHeight * widget.weeksInMonthViewAmount,
                       end: widget.weekLineHeight,
                     ).transform(_animationController.value);
+                    print('Rebuild');
                     return SizedBox(
                       height: height,
                       child: ValueListenableBuilder<DateTime>(
@@ -257,8 +258,7 @@ class _AdvancedCalendarState extends State<AdvancedCalendar> with SingleTickerPr
                                       _monthViewCurrentPage.value = pageIndex;
                                       _weekPageController!.jumpToPage(
                                         _weekRangeList.indexWhere(
-                                          (index) =>
-                                              index.first.month == _monthRangeList[pageIndex].firstDay.month,
+                                          (index) => index.first.month == _monthRangeList[pageIndex].firstDay.month,
                                         ),
                                       );
                                     },
@@ -368,12 +368,18 @@ class _AdvancedCalendarState extends State<AdvancedCalendar> with SingleTickerPr
     _animationController.dispose();
     _monthPageController!.dispose();
     _monthViewCurrentPage.dispose();
+    widget.parentScrollController.removeListener(_onParentScrolled);
 
     if (widget.controller == null) {
       _controller.dispose();
     }
 
     super.dispose();
+  }
+
+  void _onParentScrolled() {
+    final offset = widget.parentScrollController.offset;
+    _animationController.value = _animationValue + offset / (widget.weekLineHeight * 5);
   }
 
   void _handleWeekDateChanged(DateTime date) {
