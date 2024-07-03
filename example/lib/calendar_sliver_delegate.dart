@@ -43,6 +43,8 @@ class CalendarSliverDelegate implements SliverPersistentHeaderDelegate {
       child: AdvancedCalendar(
         controller: controller,
         innerDot: true,
+        preloadMonthViewAmount: 4 * 12, // 4 years
+        preloadWeekViewAmount: 4 * 51,
         parentScrollController: scrollController,
         events: events,
         startWeekDay: 7,

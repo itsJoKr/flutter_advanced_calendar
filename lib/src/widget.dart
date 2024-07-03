@@ -155,6 +155,7 @@ class _AdvancedCalendarState extends State<AdvancedCalendar> with SingleTickerPr
       widget.preloadWeekViewAmount,
       startWeekDay: widget.startWeekDay,
     );
+
     _controller.addListener(() {
       _weekRangeList = _controller.value.generateWeeks(
         widget.preloadWeekViewAmount,
@@ -166,6 +167,7 @@ class _AdvancedCalendarState extends State<AdvancedCalendar> with SingleTickerPr
       }
       widget.onSelect?.call(_controller.value);
     });
+
     if (widget.startWeekDay != null && widget.startWeekDay! < 7) {
       final time = _controller.value.subtract(
         Duration(days: _controller.value.weekday - widget.startWeekDay!),
@@ -258,11 +260,7 @@ class _AdvancedCalendarState extends State<AdvancedCalendar> with SingleTickerPr
                                         );
                                       }
                                       _monthViewCurrentPage.value = pageIndex;
-                                      _weekPageController!.jumpToPage(
-                                        _weekRangeList.indexWhere(
-                                          (index) => index.first.month == _monthRangeList[pageIndex].firstDay.month,
-                                        ),
-                                      );
+                                      _alsoChangeWeekPage(pageIndex);
                                     },
                                     controller: _monthPageController,
                                     physics: const AlwaysScrollableScrollPhysics(),
@@ -307,10 +305,9 @@ class _AdvancedCalendarState extends State<AdvancedCalendar> with SingleTickerPr
                                           height: widget.weekLineHeight,
                                           child: PageView.builder(
                                             onPageChanged: (indexPage) {
-                                              final pageIndex = _monthRangeList.indexWhere(
-                                                (index) =>
-                                                    index.firstDay.month == _weekRangeList[indexPage].first.month,
-                                              );
+                                              final pageIndex = _monthRangeList.indexWhere((index) =>
+                                                  index.firstDay.month == _weekRangeList[indexPage].first.month &&
+                                                  index.firstDay.year == _weekRangeList[indexPage].first.year);
 
                                               if (widget.onHorizontalDrag != null) {
                                                 widget.onHorizontalDrag!(
@@ -353,12 +350,6 @@ class _AdvancedCalendarState extends State<AdvancedCalendar> with SingleTickerPr
                     );
                   },
                 ),
-                // HandleBar(
-                //   onPressed: () async {
-                //     await _animationController.forward();
-                //     _animationValue = 1.0;
-                //   },
-                // ),
               ],
             ),
           ),
@@ -397,7 +388,15 @@ class _AdvancedCalendarState extends State<AdvancedCalendar> with SingleTickerPr
     _controller.value = date;
   }
 
-  void _onWeekChanged() {}
+  void _alsoChangeWeekPage(int monthPageIndex) {
+    _weekPageController!.jumpToPage(
+      _weekRangeList.indexWhere(
+        (index) =>
+            index.first.month == _monthRangeList[monthPageIndex].firstDay.month &&
+            index.first.year == _monthRangeList[monthPageIndex].firstDay.year,
+      ),
+    );
+  }
 
   void _handleFinishDrag() async {
     _captureOffset = null;
