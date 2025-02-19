@@ -15,9 +15,9 @@ class Header extends StatelessWidget {
     this.onPressed,
     this.dateStyle,
     this.todayStyle,
+    this.locale,
   }) : super(key: key);
 
-  static final _dateFormatter = DateFormat().add_yMMMM();
   final DateTime monthDate;
   final EdgeInsetsGeometry margin;
   final VoidCallback? onPressed;
@@ -25,10 +25,14 @@ class Header extends StatelessWidget {
   final TextStyle? todayStyle;
   final VoidCallback onLeftTap;
   final VoidCallback onRightTap;
+  final String? locale;
+
+
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final dateFormatter = DateFormat('yMMMM', locale);
 
     return Container(
       margin: margin,
@@ -37,7 +41,7 @@ class Header extends StatelessWidget {
         children: [
           IconButton(onPressed: onLeftTap, icon: const Icon(Icons.chevron_left)),
           Text(
-            _dateFormatter.format(monthDate),
+            dateFormatter.format(monthDate),
             style: dateStyle ?? theme.textTheme.titleMedium,
           ),
           // InkWell(

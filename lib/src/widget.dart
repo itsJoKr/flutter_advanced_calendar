@@ -38,6 +38,7 @@ class AdvancedCalendar extends StatefulWidget {
     this.innerDot = false,
     this.keepLineSize = false,
     this.calendarTextStyle,
+    this.locale,
   })  : assert(
           keepLineSize && innerDot || innerDot && !keepLineSize || !innerDot && !keepLineSize,
           'keepLineSize should be used only when innerDot is true',
@@ -89,6 +90,8 @@ class AdvancedCalendar extends StatefulWidget {
 
   /// Text style for dates in calendar
   final TextStyle? calendarTextStyle;
+
+  final String? locale;
 
   @override
   _AdvancedCalendarState createState() => _AdvancedCalendarState();
@@ -220,6 +223,7 @@ class _AdvancedCalendarState extends State<AdvancedCalendar> with SingleTickerPr
                       onPressed: _handleTodayPressed,
                       dateStyle: widget.headerStyle,
                       todayStyle: widget.todayStyle,
+                      locale: widget.locale,
                     );
                   },
                 ),
